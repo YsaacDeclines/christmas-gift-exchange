@@ -1,29 +1,34 @@
-require('dotenv').config();
 const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static('public'));
 
-const client = new MongoClient(process.env.MONGODB_URI, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
+let cachedClient = null;
 
 async function connectToDatabase() {
+    if (cachedClient) {
+        return cachedClient;
+    }
+
+    const client = new MongoClient(process.env.MONGODB_URI, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
     try {
         await client.connect();
-        console.log('Connected to MongoDB');
+        cachedClient = client;
+        return client;
     } catch (error) {
         console.error('Failed to connect to MongoDB:', error);
-        process.exit(1);
+        throw error;
     }
 }
 
@@ -34,6 +39,7 @@ app.get('/', (req, res) => {
 app.post('/api/wishlist', async (req, res) => {
     try {
         const { codename, wishlist } = req.body;
+        const client = await connectToDatabase();
         const database = client.db('christmas_gift_exchange');
         const collection = database.collection('wishlists');
 
@@ -47,6 +53,7 @@ app.post('/api/wishlist', async (req, res) => {
 
 app.get('/api/wishlist', async (req, res) => {
     try {
+        const client = await connectToDatabase();
         const database = client.db('christmas_gift_exchange');
         const collection = database.collection('wishlists');
 
@@ -58,8 +65,4 @@ app.get('/api/wishlist', async (req, res) => {
     }
 });
 
-connectToDatabase().then(() => {
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-    });
-});
+module.exports = app;
