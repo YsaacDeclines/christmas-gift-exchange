@@ -187,6 +187,6 @@ button:hover {
     }
 
     #developerName {
-        display: block;
+        display: none;
     }
 }
