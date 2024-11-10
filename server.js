@@ -24,6 +24,7 @@ async function connectToDatabase() {
 
     try {
         await client.connect();
+        console.log("Connected successfully to MongoDB");
         cachedClient = client;
         return client;
     } catch (error) {
@@ -62,6 +63,16 @@ app.get('/api/wishlist', async (req, res) => {
     } catch (error) {
         console.error('Error fetching wishlist:', error);
         res.status(500).json({ message: 'Failed to fetch wishlist' });
+    }
+});
+
+// Test MongoDB connection
+app.get('/test-db', async (req, res) => {
+    try {
+        await connectToDatabase();
+        res.json({ message: 'Database connection successful' });
+    } catch (error) {
+        res.status(500).json({ message: 'Database connection failed', error: error.message });
     }
 });
 
