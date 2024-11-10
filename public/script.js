@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightModeIcon = document.getElementById('lightModeIcon');
     const developerImage = document.getElementById('developerImage');
     const modelContainer = document.getElementById('modelContainer');
+    const developerName = document.getElementById('developerName');
 
     let darkMode = false;
     let scene, camera, renderer, model;
@@ -155,6 +156,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    developerName.addEventListener('mouseover', () => {
+    developerName.innerHTML = 'zackk';
+    });
+
+    developerName.addEventListener('mouseout', () => {
+  // Restore original innerHTML or a default value
+    developerName.innerHTML = '';
+    });
+    
     darkModeToggle.addEventListener('click', toggleDarkMode);
     window.addEventListener('mousemove', moveSnowflakes);
 
