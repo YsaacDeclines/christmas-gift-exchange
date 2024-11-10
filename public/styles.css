@@ -104,6 +104,10 @@ button:hover {
     object-fit: cover;
 }
 
+#closingPhrase {
+    margin-bottom: 50px;
+}
+
 #modelContainer {
     position: fixed;
     top: 0;
