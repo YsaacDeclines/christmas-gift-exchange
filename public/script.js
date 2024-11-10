@@ -18,10 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
+                const result = await response.json();
+                console.log(result.message);
                 form.reset();
                 fetchWishlist();
             } else {
-                console.error('Failed to submit wishlist');
+                const errorData = await response.json();
+                console.error('Failed to submit wishlist:', errorData.message);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -31,22 +34,31 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchWishlist() {
         try {
             const response = await fetch('/api/wishlist');
-            const wishlistItems = await response.json();
-
-            wishlistContainer.innerHTML = '';
-            wishlistItems.forEach(item => {
-                const wishlistItem = document.createElement('div');
-                wishlistItem.classList.add('wishlist-item');
-                wishlistItem.innerHTML = `
-                    <h3>${item.codename}</h3>
-                    <p>${item.wishlist}</p>
-                `;
-                wishlistContainer.appendChild(wishlistItem);
-            });
+            if (response.ok) {
+                const wishlistItems = await response.json();
+                wishlistContainer.innerHTML = '';
+                wishlistItems.forEach(item => {
+                    const wishlistItem = document.createElement('div');
+                    wishlistItem.classList.add('wishlist-item');
+                    wishlistItem.innerHTML = `
+                        <h3>${item.codename}</h3>
+                        <p>${item.wishlist}</p>
+                    `;
+                    wishlistContainer.appendChild(wishlistItem);
+                });
+            } else {
+                console.error('Failed to fetch wishlist');
+            }
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
     fetchWishlist();
+
+    // Test database connection
+    fetch('/test-db')
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Database test failed:', error));
 });
