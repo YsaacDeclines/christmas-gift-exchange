@@ -1,24 +1,29 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #0c3c26;
-    color: #ffffff;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">❄️</text></svg>');
-    background-size: 50px 50px;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.light-mode {
+    background: linear-gradient(to bottom, #e6f2ff, #b3d9ff);
+    color: #333;
+}
+
+body.dark-mode {
+    background: linear-gradient(to bottom, #1a1a2e, #16213e);
+    color: #fff;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
 h1 {
     text-align: center;
-    color: #ff0000;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    color: #ff4d4d;
 }
 
 form {
@@ -30,15 +35,14 @@ form {
 
 input, textarea {
     padding: 10px;
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.8);
 }
 
 button {
     padding: 10px;
-    background-color: #ff0000;
-    color: #ffffff;
+    background-color: #ff4d4d;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -46,17 +50,59 @@ button {
 }
 
 button:hover {
-    background-color: #cc0000;
+    background-color: #ff3333;
 }
 
 .wishlist-item {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
 }
 
-.wishlist-item h3 {
-    margin: 0;
-    color: #ffcc00;
+#darkModeToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#developerInfo {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#developerImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+
+.snowflake {
+    position: fixed;
+    color: #fff;
+    font-size: 20px;
+    user-select: none;
+    pointer-events: none;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+    }
 }
