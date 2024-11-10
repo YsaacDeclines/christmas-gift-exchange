@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const darkModeToggle = document.getElementById('darkModeToggle');
     const darkModeIcon = document.getElementById('darkModeIcon');
     const lightModeIcon = document.getElementById('lightModeIcon');
+    const developerInfo = document.getElementById('developerInfo');
+    const developerName = document.getElementById('developerName');
 
     let darkMode = false;
 
@@ -89,6 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     darkModeToggle.addEventListener('click', toggleDarkMode);
     window.addEventListener('mousemove', moveSnowflakes);
+
+    developerInfo.addEventListener('mouseenter', () => {
+        developerName.classList.remove('hidden');
+    });
+
+    developerInfo.addEventListener('mouseleave', () => {
+        developerName.classList.add('hidden');
+    });
 
     createSnowflakes();
     fetchWishlist();
