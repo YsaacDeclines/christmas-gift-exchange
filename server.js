@@ -3,6 +3,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const path = require('path');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -66,14 +67,6 @@ app.get('/api/wishlist', async (req, res) => {
     }
 });
 
-// Test MongoDB connection
-app.get('/test-db', async (req, res) => {
-    try {
-        await connectToDatabase();
-        res.json({ message: 'Database connection successful' });
-    } catch (error) {
-        res.status(500).json({ message: 'Database connection failed', error: error.message });
-    }
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
-
-module.exports = app;
