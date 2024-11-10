@@ -1,35 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('wishlistForm');
     const wishlistContainer = document.getElementById('wishlistContainer');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkModeIcon = document.getElementById('darkModeIcon');
+    const lightModeIcon = document.getElementById('lightModeIcon');
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    let darkMode = false;
 
-        const codename = document.getElementById('codename').value;
-        const wishlist = document.getElementById('wishlist').value;
-
-        try {
-            const response = await fetch('/api/wishlist', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ codename, wishlist }),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result.message);
-                form.reset();
-                fetchWishlist();
-            } else {
-                const errorData = await response.json();
-                console.error('Failed to submit wishlist:', errorData.message);
-            }
-        } catch (error) {
-            console.error('Error:', error);
+    function createSnowflakes() {
+        const numberOfSnowflakes = 50;
+        for (let i = 0; i < numberOfSnowflakes; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = '❄';
+            snowflake.style.left = `${Math.random() * 100}vw`;
+            snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            snowflake.style.animationDelay = `${Math.random() * 2}s`;
+            snowflake.dataset.speed = Math.random() * 0.5 + 0.1;
+            document.body.appendChild(snowflake);
         }
-    });
+    }
+
+    function moveSnowflakes(e) {
+        const snowflakes = document.querySelectorAll('.snowflake');
+        snowflakes.forEach((flake) => {
+            const speed = flake.dataset.speed;
+            const x = (e.clientX * speed) / 100;
+            const y = (e.clientY * speed) / 100;
+            flake.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    }
+
+    function toggleDarkMode() {
+        darkMode = !darkMode;
+        document.body.classList.toggle('dark-mode', darkMode);
+        document.body.classList.toggle('light-mode', !darkMode);
+        darkModeIcon.style.display = darkMode ? 'none' : 'inline';
+        lightModeIcon.style.display = darkMode ? 'inline' : 'none';
+    }
 
     async function fetchWishlist() {
         try {
@@ -54,11 +62,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    fetchWishlist();
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const codename = document.getElementById('codename').value;
+        const wishlist = document.getElementById('wishlist').value;
 
-    // Test database connection
-    fetch('/test-db')
-        .then(response => response.json())
-        .then(data => console.log(data.message))
-        .catch(error => console.error('Database test failed:', error));
+        try {
+            const response = await fetch('/api/wishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ codename, wishlist }),
+            });
+
+            if (response.ok) {
+                form.reset();
+                fetchWishlist();
+            } else {
+                console.error('Failed to submit wishlist');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+    window.addEventListener('mousemove', moveSnowflakes);
+
+    createSnowflakes();
+    fetchWishlist();
+    document.body.classList.add('light-mode');
 });
