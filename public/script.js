@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     developerName.addEventListener('mouseover', () => {
-    developerName.innerHTML = 'zackk';
+    developerName.textContent = 'zackk';
     });
 
     developerName.addEventListener('mouseout', () => {
