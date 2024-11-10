@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const darkModeToggle = document.getElementById('darkModeToggle');
     const darkModeIcon = document.getElementById('darkModeIcon');
     const lightModeIcon = document.getElementById('lightModeIcon');
-    const developerInfo = document.getElementById('developerInfo');
-    const developerName = document.getElementById('developerName');
     const developerImage = document.getElementById('developerImage');
     const modelContainer = document.getElementById('modelContainer');
 
@@ -92,17 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    darkModeToggle.addEventListener('click', toggleDarkMode);
-    window.addEventListener('mousemove', moveSnowflakes);
-
-    developerInfo.addEventListener('mouseenter', () => {
-        developerName.classList.remove('hidden');
-    });
-
-    developerInfo.addEventListener('mouseleave', () => {
-        developerName.classList.add('hidden');
-    });
-
     function initThreeJS() {
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -168,7 +155,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+    window.addEventListener('mousemove', moveSnowflakes);
+
+    // Create snowflakes initially
     createSnowflakes();
+
+    // Fetch wishlist initially
     fetchWishlist();
+
+    // Set initial mode
     document.body.classList.add('light-mode');
+
+    // Recreate snowflakes every 10 seconds
+    setInterval(createSnowflakes, 10000);
 });
