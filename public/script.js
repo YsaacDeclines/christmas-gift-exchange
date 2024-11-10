@@ -6,10 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightModeIcon = document.getElementById('lightModeIcon');
     const developerImage = document.getElementById('developerImage');
     const modelContainer = document.getElementById('modelContainer');
-    const developerName = document.getElementById('developerName');
 
     let darkMode = false;
-    let scene, camera, renderer, model;
 
     function createSnowflakes() {
         const numberOfSnowflakes = 50;
@@ -18,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             snowflake.className = 'snowflake';
             snowflake.textContent = '❄';
             snowflake.style.left = `${Math.random() * 100}vw`;
+            snowflake.style.top = `${Math.random() * 100}vh`;
             snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
             snowflake.style.animationDelay = `${Math.random() * 2}s`;
             snowflake.dataset.speed = Math.random() * 0.5 + 0.1;
@@ -82,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 form.reset();
-                fetchWishlist();
+                await fetchWishlist();
             } else {
                 console.error('Failed to submit wishlist');
             }
@@ -91,92 +90,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function initThreeJS() {
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        modelContainer.appendChild(renderer.domElement);
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(0, 1, 0);
-        scene.add(directionalLight);
-
-        camera.position.z = 5;
-    }
-
-    function loadModel() {
-        const loader = new THREE.GLTFLoader();
-        loader.load(
-            'your_model.glb',
-            (gltf) => {
-                model = gltf.scene;
-                scene.add(model);
-                animateModel();
-            },
-            (xhr) => {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-            },
-            (error) => {
-                console.error('An error happened', error);
-            }
-        );
-    }
-
-    function animateModel() {
-        requestAnimationFrame(animateModel);
-
-        if (model) {
-            model.rotation.y += 0.01;
-        }
-
-        renderer.render(scene, camera);
-    }
-
-    developerImage.addEventListener('click', () => {
+    function showGifPopup() {
+        modelContainer.innerHTML = `
+            <div class="gif-popup">
+                <img src="your-animation.gif" alt="Animation" />
+                <button id="closePopup">Close</button>
+            </div>
+        `;
         modelContainer.classList.add('active');
-        if (!scene) {
-            initThreeJS();
-            loadModel();
+
+        document.getElementById('closePopup').addEventListener('click', (e) => {
+            e.stopPropagation();
+            modelContainer.classList.remove('active');
+        });
+    }
+
+    developerImage.addEventListener('click', showGifPopup);
+
+    modelContainer.addEventListener('click', (e) => {
+        if (e.target === modelContainer) {
+            modelContainer.classList.remove('active');
         }
     });
 
-    modelContainer.addEventListener('click', () => {
-        modelContainer.classList.remove('active');
-    });
-
-    window.addEventListener('resize', () => {
-        if (camera && renderer) {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-    });
-
-    developerName.addEventListener('mouseover', () => {
-    developerName.textContent = 'zackk';
-    });
-
-    developerName.addEventListener('mouseout', () => {
-  // Restore original innerHTML or a default value
-    developerName.innerHTML = '';
-    });
-    
     darkModeToggle.addEventListener('click', toggleDarkMode);
     window.addEventListener('mousemove', moveSnowflakes);
 
-    // Create snowflakes initially
+    // Create initial snowflakes
     createSnowflakes();
 
-    // Fetch wishlist initially
+    // Fetch initial wishlist
     fetchWishlist();
 
     // Set initial mode
     document.body.classList.add('light-mode');
 
-    // Recreate snowflakes every 10 seconds
-    setInterval(createSnowflakes, 10000);
+    // Recreate snowflakes periodically
+    setInterval(() => {
+        const currentSnowflakes = document.querySelectorAll('.snowflake');
+        if (currentSnowflakes.length < 50) {
+            createSnowflakes();
+        }
+    }, 5000);
 });
