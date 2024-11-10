@@ -45,11 +45,24 @@ app.post('/api/wishlist', async (req, res) => {
         const database = client.db('christmas_gift_exchange');
         const collection = database.collection('wishlists');
 
-        await collection.insertOne({ codename, wishlist });
-        res.status(201).json({ message: 'Wishlist added successfully' });
+        // Check if a wishlist with the same codename already exists
+        const existingWishlist = await collection.findOne({ codename });
+
+        if (existingWishlist) {
+            // If it exists, update the wishlist
+            await collection.updateOne(
+                { codename },
+                { $set: { wishlist } }
+            );
+            res.status(200).json({ message: 'Wishlist updated successfully' });
+        } else {
+            // If it doesn't exist, insert a new wishlist
+            await collection.insertOne({ codename, wishlist });
+            res.status(201).json({ message: 'Wishlist added successfully' });
+        }
     } catch (error) {
-        console.error('Error adding wishlist:', error);
-        res.status(500).json({ message: 'Failed to add wishlist' });
+        console.error('Error adding/updating wishlist:', error);
+        res.status(500).json({ message: 'Failed to add/update wishlist' });
     }
 });
 
