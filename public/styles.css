@@ -80,20 +80,7 @@ button:hover {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 10px;
-}
-
-#developerInfo:hover #developerName {
-    display: block;
-}
-
-#developerName {
-   
-    margin-top: 5px;
-    font-size: 12px;
-}
-
-.hidden {
-    display: none;
+    transition: all 0.3s ease;
 }
 
 #developerImage {
@@ -102,6 +89,16 @@ button:hover {
     border-radius: 50%;
     margin-bottom: 5px;
     object-fit: cover;
+}
+
+#developerName {
+    display: none;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+#developerInfo:hover #developerName {
+    display: block;
 }
 
 #modelContainer {
@@ -116,7 +113,35 @@ button:hover {
 }
 
 #modelContainer.active {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gif-popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.gif-popup img {
+    max-width: 100%;
+    max-height: 70vh;
+}
+
+.gif-popup button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.gif-popup button:hover {
+    background-color: #ff3333;
 }
 
 .snowflake {
@@ -134,5 +159,34 @@ button:hover {
     }
     100% {
         transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+    #developerInfo {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 10px;
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 5px 0;
+    }
+
+    #developerImage {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 0;
+        margin-right: 10px;
+    }
+
+    #developerInfo p {
+        margin: 0;
+    }
+
+    #developerName {
+        display: block;
     }
 }
