@@ -72,7 +72,7 @@ button:hover {
 
 #developerInfo {
     position: fixed;
-    bottom: 20px;
+    bottom: 35px;
     left: 20px;
     display: flex;
     flex-direction: column;
